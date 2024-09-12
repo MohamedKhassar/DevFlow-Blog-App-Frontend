@@ -8,6 +8,9 @@ export default {
       fontFamily: {
         Poppins: "Poppins,sans-serif",
       },
+      colors: {
+        dark: "#171717",
+      },
       screens: {
         xs: "400px",
       },

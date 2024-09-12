@@ -6,7 +6,8 @@ import { motion } from 'framer-motion'
 const SignIn = () => {
     const [isShowed, setIsShowed] = useState(false)
     return (
-        <div className='flex justify-center items-center h-screen'>
+        <div className='flex justify-center items-center h-screen flex-col gap-y-5 py-32'>
+            <Link to={"/"}><h1 className='font-bold lg:text-4xl md:text-2xl text-xl dark:text-slate-300'>DevFlow</h1></Link>
             <div className="duration-300 shadow-2xl dark:shadow-gray-200/10 rounded-lg lg:w-[60rem] lg:h-[45rem] md:w-[45rem] md:h-[38rem]  mx-3 sm:mx-10 border border-slate-200 dark:border-slate-700 flex justify-between">
                 <motion.div
                     initial={window.innerWidth >= 1024 && { x: 500 }} // Slide-in only on large screens
