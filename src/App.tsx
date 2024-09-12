@@ -1,34 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import SignIn from "@components/auth/SignIn"
+import SignUp from "@components/auth/SignUp"
+import { cn } from "lib/cn"
+import { useAppDispatch, useAppSelector } from "lib/store"
+import { PiMoonStarsFill, PiSunDimFill } from "react-icons/pi"
+import { Route, Routes, useLocation } from "react-router-dom"
+import { setTheme } from "slice/themeSlice"
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
+  const theme = useAppSelector(state => state.theme)
+  const { pathname } = useLocation()
+  const dispatch = useAppDispatch()
+  console.log(theme.value)
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className={cn("dark:bg-[#212121] dark:text-white bg-white relative",
+      theme.value
+    )}>
+      <button onClick={() => dispatch(setTheme(theme.value === "light" ? "dark" : "light"))} className={cn("absolute top-5 right-10 dark:border-[#494949] rounded-lg p-3 dark:hover:bg-[#171717] lg:dark:bg-transparent dark:bg-[#171717] hover:bg-gray-300 duration-300 border",
+        pathname === "/" && "hidden"
+      )}>
+        {theme.value === "light" ? <PiMoonStarsFill /> :
+          <PiSunDimFill />}
+      </button>
+      <Routes>
+        <Route element={<SignIn />} path="/sign-in" />
+        <Route element={<SignUp />} path="/sign-up" />
+      </Routes>
+    </div>
   )
 }
 
