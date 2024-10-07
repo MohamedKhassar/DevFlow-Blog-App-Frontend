@@ -7,14 +7,15 @@ const SignIn = () => {
     const [isShowed, setIsShowed] = useState(false)
     return (
         <div className='flex justify-center items-center h-screen flex-col gap-y-5 py-32'>
-            <Link to={"/"}><h1 className='font-bold lg:text-4xl md:text-2xl text-xl dark:text-slate-300'>DevFlow</h1></Link>
+            <Link to={"/"}><h1 className='font-bold lg:text-4xl md:text-2xl text-xl '>DevFlow</h1></Link>
             <div className="duration-300 shadow-2xl dark:shadow-gray-200/10 rounded-lg lg:w-[60rem] lg:h-[45rem] md:w-[45rem] md:h-[38rem]  mx-3 sm:mx-10 border border-slate-200 dark:border-slate-700 flex justify-between">
                 <motion.div
                     initial={window.innerWidth >= 1024 && { x: 500 }} // Slide-in only on large screens
                     animate={{ x: 0 }}
-                    transition={{ duration: 1.5 }} className='px-10 md:py-20 py-10 flex flex-col justify-center items-center md:gap-y-8 gap-y-6 lg:w-1/2 w-full'>
-                    <h1 className='font-semibold capitalize lg:text-5xl md:text-4xl text-3xl text-center'>login</h1>
-                    <p className='text-center text-sm md:text-base '>Enter Your Email Address And Password To Access <b>DevFlow</b> Account</p>
+                    transition={{ duration: .8 }}
+                    className='px-10 md:py-20 py-10 flex flex-col justify-center items-center md:gap-y-8 gap-y-6 lg:w-1/2 w-full'>
+                    <h1 className='font-semibold capitalize lg:text-4xl md:text-3xl text-2xl text-center'>login</h1>
+                    <p className='text-center md:text-sm text-xs '>Enter Your Email Address And Password To Access <b>DevFlow</b> Account</p>
                     <form className='space-y-8 w-full'>
                         <div className='space-y-3'>
                             <label htmlFor="email" className='capitalize font-semibold md:text-base text-sm'>email <b className='text-red-500'>*</b></label>

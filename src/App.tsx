@@ -11,12 +11,11 @@ const App = () => {
   const theme = useAppSelector(state => state.theme)
   const { pathname } = useLocation()
   const dispatch = useAppDispatch()
-  console.log(theme.value)
   return (
     <div className={cn("dark:bg-[#212121] dark:text-white bg-white relative h-screen",
       theme.value
     )}>
-      <button onClick={() => dispatch(setTheme(theme.value === "light" ? "dark" : "light"))} className={cn("absolute top-5 right-10 dark:border-[#494949] rounded-lg p-3 dark:hover:bg-[#171717] lg:dark:bg-transparent dark:bg-[#171717] hover:bg-gray-300 duration-300 border",
+      <button onClick={() => dispatch(setTheme(theme.value === "light" ? "dark" : "light"))} className={cn("absolute top-5 right-10 dark:border-[#494949] rounded-lg p-3 dark:hover:bg-[#171717] lg:dark:bg-transparent dark:bg-[#171717] hover:bg-gray-300 duration-300 border z-10",
         pathname === "/" && "hidden"
       )}>
         {theme.value === "light" ? <PiMoonStarsFill /> :

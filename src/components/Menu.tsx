@@ -87,7 +87,7 @@ const Menu = ({ closeMenu, isOpened }: { closeMenu: () => void, isOpened: boolea
                             // Add overflow-y-scroll and remove h-screen for scrolling
                             className="md:w-[60%] w-[80%] h-screen flex flex-col gap-x-10 lg:hidden relative
                     items-center justify-start py-8 gap-10 dark:bg-dark bg-white p-3 overflow-y-scroll max-h-screen">
-                            <p className='font-bold lg:text-3xl md:text-2xl text-xl'>DevFlow</p>
+                            <Link to={"/"} className='font-bold lg:text-3xl md:text-2xl text-xl'>DevFlow</Link>
                             <IoClose onClick={closeMenu} className="lg:hidden md:size-8 size-6 absolute top-2 right-5" />
                             <div className="flex md:hidden justify-center gap-x-4 items-center relative w-full">
                                 <input className="border dark:border-slate-500 w-full border-gray-400 rounded lg:p-2 p-1 z-10 bg-slate-200 dark:bg-gray-800/20 outline-none appearance-none" type="text" placeholder="Search..." />
@@ -110,7 +110,7 @@ const Menu = ({ closeMenu, isOpened }: { closeMenu: () => void, isOpened: boolea
                                 <h1 className="text-xl text-start capitalize font-semibold">popular tags</h1>
                                 <div className="space-y-5 flex flex-col">
                                     {tags.splice(0, 10).map((tag, index) => (
-                                        <Link className="rounded-md capitalize text-cyan-900 dark:text-cyan-500 underline underline-offset-4 duration-300 w-full" to={`/posts?tag=${tag}`} key={index}>
+                                        <Link className="rounded-md capitalize text-cyan-900 dark:text-cyan-500 underline underline-offset-4 duration-300 w-full" to={`/tags/${tag}`} key={index}>
                                             #{tag}
                                         </Link>
                                     ))}
