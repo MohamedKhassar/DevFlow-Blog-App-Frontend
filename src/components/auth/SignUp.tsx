@@ -3,7 +3,7 @@ import { BsGithub } from 'react-icons/bs'
 import { FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { UserType } from 'types'
+import { RegisterUserType } from 'types'
 import { useAppDispatch, useAppSelector } from 'lib/store'
 import { registerUser } from 'slice/authSlice'
 import { BiLoader } from 'react-icons/bi'
@@ -14,7 +14,7 @@ const SignUn = () => {
     const [isShowed, setIsShowed] = useState(false)
     const [isSignIn, setIsSignIn] = useState(false)
     const navigate = useNavigate()
-    const [user, setUser] = useState<UserType>({
+    const [user, setUser] = useState<RegisterUserType>({
         name: "mohamed",
         email: "mohamedkhassar775@gmail.com",
         password: "Medkh@2638",
@@ -37,7 +37,7 @@ const SignUn = () => {
                 setIsSignIn(true)
                 setTimeout(() => {
                     setIsSignIn(false)
-                    navigate("/")
+                    navigate("/sign-in")
                 }, 3000)
             }
         } catch (err) {
@@ -52,7 +52,7 @@ const SignUn = () => {
 
             >
                 <motion.div
-                    className='px-10 md:py-20 py-10 flex flex-col justify-center items-center md:gap-y-7 gap-y-6 lg:w-1/2 w-full'
+                    className='px-10 md:py-20 py-10 flex flex-col justify-center items-center md:gap-y-5 gap-y-4 lg:w-1/2 w-full'
                     initial={window.innerWidth >= 1024 && { x: 500 }} // Slide-in only on large screens
                     animate={{ x: 0 }}
                     transition={{ duration: .8 }}
@@ -63,31 +63,38 @@ const SignUn = () => {
                         <div className='space-y-3'>
                             <label htmlFor="name" className='capitalize font-semibold md:text-base text-sm'>name <b className='text-red-500'>*</b></label>
                             <input onChange={handleUserChange} value={user.name} name='name' type="text" className={cn('w-full rounded bg-slate-300 dark:bg-slate-100 md:py-2 py-1.5 px-4 outline-none dark:text-black',
-                                !user.name && error && "ring-2 ring-red-600 shadow-red-600 shadow-md duration-300 bg-red-100/50 dark:bg-red-300/20"
+                                !user.name && error && "ring-2 ring-red-600 shadow-red-600 dark:text-white shadow-md duration-300 bg-red-100/50 dark:bg-red-300/20",
+                                error?.toLowerCase()?.includes("name") && "ring-2 ring-red-600 shadow-red-600 dark:text-white shadow-md duration-300 bg-red-100/50 dark:bg-red-300/20"
                             )} id='name' />
                         </div>
                         <div className='space-y-3'>
                             <label htmlFor="email" className='capitalize font-semibold md:text-base text-sm'>email <b className='text-red-500'>*</b></label>
                             <input value={user.email} onChange={handleUserChange} name='email' type="email" className={cn('w-full rounded bg-slate-300 dark:bg-slate-100 md:py-2 py-1.5 px-4 outline-none dark:text-black',
-                                !user.email && error && "ring-2 ring-red-600 shadow-red-600 shadow-md   bg-red-100/50 dark:bg-red-300/20"
+                                !user.email && error && "ring-2 ring-red-600 shadow-red-600 dark:text-white shadow-md duration-300 bg-red-100/50 dark:bg-red-300/20",
+                                error?.toLowerCase()?.includes("email") && "ring-2 ring-red-600 shadow-red-600 dark:text-white shadow-md duration-300 bg-red-100/50 dark:bg-red-300/20"
                             )} id='email' />
                         </div>
                         <div className='space-y-3'>
                             <label htmlFor="password" className='capitalize font-semibold md:text-base text-sm'>password <b className='text-red-500'>*</b></label>
                             <div className='relative flex items-center'>
                                 <input value={user.password} onChange={handleUserChange} name='password' type={isShowed ? "text" : "password"} className={cn('w-full rounded bg-slate-300 dark:bg-slate-100 md:py-2 py-1.5 px-4 outline-none dark:text-black',
-                                    !user.password && error && "ring-2 ring-red-600 shadow-red-600 shadow-md   bg-red-100/50 dark:bg-red-300/20"
+                                    !user.password && error && "ring-2 ring-red-600 shadow-red-600 dark:text-white shadow-md duration-300 bg-red-100/50 dark:bg-red-300/20",
+                                    error?.toLowerCase()?.includes("password") && "ring-2 ring-red-600 shadow-red-600 dark:text-white shadow-md duration-300 bg-red-100/50 dark:bg-red-300/20"
                                 )} id='password' />
                                 {
                                     user.password &&
-                                    <button onClick={() => setIsShowed(!isShowed)} type='button' className='absolute right-3 text-black'>
+                                    <button onClick={() => setIsShowed(!isShowed)} type='button' className={cn('absolute right-3 text-black',
+                                        !user.password && error || error?.toLowerCase()?.includes("password") && "dark:text-white"
+                                    )}>
                                         {isShowed ? <FaEyeSlash size={22} /> : <FaEye size={22} />}
                                     </button>
                                 }
                             </div>
                         </div>
                         <div className='space-y-3'>
-                            {error && <p className='text-red-600 duration-300'>{error}</p>}
+                            {error && <p className={cn('text-red-600 text-justify duration-300',
+                                error.toLowerCase().includes("password") && "text-sm"
+                            )}>{error}</p>}
                             <button className='bg-slate-700 text-white md:py-4 py-3 md:text-base text-sm rounded-md w-full capitalize duration-200 hover:bg-slate-800 flex justify-center disabled:cursor-not-allowed' disabled={isLoading}>{isLoading ? <BiLoader className='animate-spin w-full' /> : "sign in"}</button>
                         </div>
                         <div className='relative flex justify-center items-center'>

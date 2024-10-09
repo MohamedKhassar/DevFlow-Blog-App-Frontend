@@ -8,11 +8,13 @@ import { PiMoonStarsFill, PiSunDimFill } from "react-icons/pi"
 import { Link, useLocation } from "react-router-dom"
 import { setTheme } from "slice/themeSlice"
 import Menu from "./Menu"
+import { FaUser } from "react-icons/fa"
 
 const NavBar = () => {
     const { pathname } = useLocation()
     const theme = useAppSelector(state => state.theme)
     const [isOpened, setIsOpened] = useState(false)
+    const { user } = useAppSelector(state => state.user)
     const dispatch = useAppDispatch()
 
     return (
@@ -31,20 +33,27 @@ const NavBar = () => {
                 <input className="border dark:border-slate-500 w-full border-gray-400 rounded lg:p-2 p-1 z-10 bg-slate-200 dark:bg-gray-800/20 outline-none appearance-none" type="text" placeholder="Search..." />
                 <BiSearch className="absolute right-[0rem] border-gray-400  border p-2 cursor-pointer w-fit dark:hover:bg-[#374151] hover:bg-[#6b7588] z-10 duration-300 rounded-r h-full dark:bg-transparent bg-white" size={25} />
             </div>
-            <div className="flex gap-x-10
+            <div className="flex gap-x-10 justify-center
              items-center">
-                <div className="lg:grid hidden grid-cols-2 gap-x-5">
-                    <Link to={"/sign-in"}>
-                        <button className="border-none hover:border hover:no-underline underline underline-offset-4 rounded-md p-3 capitalize dark:hover:bg-[#636f81]/40 hover:bg-cyan-800/60 hover:text-white dark:hover:border-[#374151]  duration-300  w-full text-center">
-                            login
-                        </button>
-                    </Link>
-                    <Link to={"/sign-up"}>
-                        <button className="border rounded-md p-3 capitalize dark:hover:bg-[#374151] hover:bg-slate-500 hover:text-white dark:hover:border-[#374151]  duration-300 w-full text-center">
-                            sign-up
-                        </button>
-                    </Link>
-                </div>
+                {
+                    user ?
+                        <div className="bg-dark/30 dark:bg-white/20 rounded-full p-3 cursor-pointer">
+                            <FaUser className="size-5" />
+                        </div>
+                        :
+                        <div className="lg:grid hidden grid-cols-2 gap-x-5">
+                            <Link to={"/sign-in"}>
+                                <button className="border-none hover:border hover:no-underline underline underline-offset-4 rounded-md p-3 capitalize dark:hover:bg-[#636f81]/40 hover:bg-cyan-800/60 hover:text-white dark:hover:border-[#374151]  duration-300  w-full text-center">
+                                    login
+                                </button>
+                            </Link>
+                            <Link to={"/sign-up"}>
+                                <button className="border rounded-md p-3 capitalize dark:hover:bg-[#374151] hover:bg-slate-500 hover:text-white dark:hover:border-[#374151]  duration-300 w-full text-center">
+                                    sign-up
+                                </button>
+                            </Link>
+                        </div>
+                }
                 <button onClick={() => dispatch(setTheme(theme.value === "light" ? "dark" : "light"))} className={cn("lg:static absolute right-4 dark:border-[#494949] rounded-lg md:p-3 p-2 dark:hover:bg-[#171717] lg:dark:bg-transparent dark:bg-[#171717] hover:bg-gray-300 duration-300 border"
                 )}>
                     {theme.value === "light" ? <PiMoonStarsFill /> :
