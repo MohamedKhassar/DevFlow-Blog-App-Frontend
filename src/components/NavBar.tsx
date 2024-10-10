@@ -1,6 +1,6 @@
 import { cn } from "lib/cn"
 import { useAppDispatch, useAppSelector } from "lib/store"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { BiSearch } from "react-icons/bi"
 import { IoClose } from "react-icons/io5"
 import { MdOutlineMenu } from "react-icons/md"
@@ -8,14 +8,31 @@ import { PiMoonStarsFill, PiSunDimFill } from "react-icons/pi"
 import { Link, useLocation } from "react-router-dom"
 import { setTheme } from "slice/themeSlice"
 import Menu from "./Menu"
-import { FaUser } from "react-icons/fa"
+import { FaSignOutAlt, FaUser } from "react-icons/fa"
+import { logout } from "slice/authSlice"
+import { AnimatePresence, motion } from "framer-motion"
 
 const NavBar = () => {
     const { pathname } = useLocation()
     const theme = useAppSelector(state => state.theme)
+    const [isUserMenu, setIsUserMenu] = useState(false)
     const [isOpened, setIsOpened] = useState(false)
     const { user } = useAppSelector(state => state.user)
     const dispatch = useAppDispatch()
+    const ref = useRef<HTMLDivElement>(null);
+    const handleClickOutside = (event: MouseEvent) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+            setIsUserMenu(false)
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    });
 
     return (
         <div className={
@@ -37,8 +54,40 @@ const NavBar = () => {
              items-center">
                 {
                     user ?
-                        <div className="bg-dark/30 dark:bg-white/20 rounded-full p-3 cursor-pointer">
-                            <FaUser className="size-5" />
+                        <div className="relative hidden lg:block" ref={ref}>
+                            <button onClick={() => setIsUserMenu(!isUserMenu)} className=" bg-dark/30 dark:bg-purple-950/50 rounded-full p-3 cursor-pointer border-2 border-purple-900 duration-300 hover:border-purple-800">
+                                <FaUser className="size-5" />
+                            </button>
+                            <AnimatePresence>
+                                {
+                                    isUserMenu &&
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1, transition: { duration: .2, ease: "linear" } }}
+                                        exit={{ opacity: 0, scale: 0.9, transition: { duration: .1, ease: "linear" } }}
+                                        className="absolute p-5 w-64 space-y-3 dark:bg-black backdrop-blur dark:border-none border right-0 rounded-lg top-full my-3">
+                                        <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300">
+                                            <h2>{user.name}</h2>
+                                        </div>
+                                        <hr className="border-gray-600" />
+                                        <div className="capitalize space-y-2">
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
+                                                <Link to={"/profile"}>
+                                                    profile
+                                                </Link>
+                                            </div>
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
+                                                <Link to={"newPost"}>create a post</Link>
+                                            </div>
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
+                                                <Link to={"settings"}>settings</Link>
+                                            </div>
+                                        </div>
+                                        <hr className="border-gray-600" />
+                                        <button onClick={() => dispatch(logout())} className="p-2.5 hover:bg-red-800/80 hover:text-white rounded-lg capitalize duration-300 w-full text-left flex items-center justify-between">sign out <FaSignOutAlt /></button>
+                                    </motion.div>
+                                }
+                            </AnimatePresence>
                         </div>
                         :
                         <div className="lg:grid hidden grid-cols-2 gap-x-5">

@@ -2,3 +2,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@media (600px<=width<=950px ) {   
+    ::-webkit-scrollbar {
+        width: 5px;
+        -webkit-border-radius: 20px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        /* Customize the scrollbar thumb */
+        border-radius: 20px;
+        @apply bg-slate-950
+    }
+}

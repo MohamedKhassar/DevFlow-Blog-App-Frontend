@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import { LoginUserType, RegisterUserType, UserTypeBase } from "types";
+import { LoginUserType, RegisterUserType } from "types";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-const initialState: { user: UserTypeBase, isLoading: boolean, error: string | null } = {
+const initialState: { user: RegisterUserType | null, isLoading: boolean, error: string | null } = {
     user: cookies.get("user") || null,
     isLoading: false,
     error: null,
@@ -78,7 +78,11 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        resetState: (state) => state = { ...state, error: null, isLoading: false }
+        resetState: (state) => state = { ...state, error: null, isLoading: false },
+        logout: (state) => {
+            cookies.remove("user", { path: "/" })
+            state.user = null
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -90,7 +94,7 @@ const userSlice = createSlice({
                 state.isLoading = false
                 state.error = action.payload as string || "Something went wrong"
             })
-            .addCase(registerUser.fulfilled, (state, action: PayloadAction<UserTypeBase>) => {
+            .addCase(registerUser.fulfilled, (state, action: PayloadAction<RegisterUserType>) => {
                 state.user = action.payload
                 state.isLoading = false
                 state.error = null
@@ -103,7 +107,7 @@ const userSlice = createSlice({
                 state.isLoading = false
                 state.error = action.payload as string || "Something went wrong"
             })
-            .addCase(loginUser.fulfilled, (state, action: PayloadAction<UserTypeBase>) => {
+            .addCase(loginUser.fulfilled, (state, action: PayloadAction<RegisterUserType>) => {
                 state.user = action.payload
                 cookies.set("user", action.payload, { path: "/" })
                 state.isLoading = false
@@ -111,5 +115,5 @@ const userSlice = createSlice({
             })
     }
 })
-export const { resetState } = userSlice.actions;
+export const { resetState, logout } = userSlice.actions;
 export default userSlice.reducer

@@ -3,10 +3,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { BiSearch } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
+import { useAppDispatch, useAppSelector } from "lib/store";
+import { logout } from "slice/authSlice";
+import { FaSignOutAlt } from "react-icons/fa";
 
 const Menu = ({ closeMenu, isOpened }: { closeMenu: () => void, isOpened: boolean }) => {
     const ref = useRef<HTMLDivElement>(null);
-
+    const { user } = useAppSelector(state => state.user)
+    const dispatch = useAppDispatch()
     const handleClickOutside = (event: MouseEvent) => {
         if (ref.current && !ref.current.contains(event.target as Node)) {
             closeMenu();
@@ -75,16 +79,15 @@ const Menu = ({ closeMenu, isOpened }: { closeMenu: () => void, isOpened: boolea
         <AnimatePresence>
             {
                 isOpened &&
-                <div className="h-screen block lg:hidden">
+                <div className="h-screen block lg:hidden z-50">
                     <div className='absolute top-0 h-screen w-full left-0 flex justify-start dark:bg-dark/30 bg-black/30 backdrop-blur'>
 
                         <motion.div
                             ref={ref}
                             initial={{ x: "-100%" }}
                             animate={{ x: 0 }}
-                            transition={{ duration: 0.7 }}
+                            transition={{ duration: 0.5 }}
                             exit={{ x: "-100%" }}
-                            // Add overflow-y-scroll and remove h-screen for scrolling
                             className="md:w-[60%] w-[80%] h-screen flex flex-col gap-x-10 lg:hidden relative
                     items-center justify-start py-8 gap-10 dark:bg-dark bg-white p-3 overflow-y-scroll max-h-screen">
                             <Link to={"/"} className='font-bold lg:text-3xl md:text-2xl text-xl'>DevFlow</Link>
@@ -94,18 +97,44 @@ const Menu = ({ closeMenu, isOpened }: { closeMenu: () => void, isOpened: boolea
                                 <BiSearch className="absolute right-[0rem] border-gray-400 border p-2 cursor-pointer w-fit dark:hover:bg-[#374151] hover:bg-[#6b7588] z-10 duration-300 rounded-r h-full dark:bg-transparent bg-white" size={25} />
                             </div>
                             <p className='text-center text-sm md:text-base capitalize'>Share your thoughts and connect with others by creating posts and interacting with the <b>DevFlow</b> community.</p>
-                            <div className="grid gap-y-5 w-full">
-                                <Link to={"/sign-in"}>
-                                    <button className="border-none border underline underline-offset-4 rounded-md p-3 capitalize dark:bg-[#636f81]/40 bg-cyan-800/60 text-white dark:border-[#374151] duration-300 w-full text-center">
-                                        login
-                                    </button>
-                                </Link>
-                                <Link to={"/sign-up"}>
-                                    <button className="dark:border border-0 rounded-md p-3 capitalize dark:bg-[#374151] bg-slate-500 text-white dark:border-[#374151] duration-300 w-full text-center">
-                                        sign-up
-                                    </button>
-                                </Link>
-                            </div>
+                            {
+                                user ?
+                                    <div
+                                        className="p-5 w-full space-y-3 dark:bg-black backdrop-blur dark:border-none border rounded-lg my-3">
+                                        <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300">
+                                            <h2>{user.name}</h2>
+                                        </div>
+                                        <hr className="border-gray-600" />
+                                        <div className="space-y-2 capitalize">
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
+                                                <Link to={"/profile"}>
+                                                    profile
+                                                </Link>
+                                            </div>
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
+                                                <Link to={"newPost"}>create a post</Link>
+                                            </div>
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
+                                                <Link to={"settings"}>settings</Link>
+                                            </div>
+                                        </div>
+                                        <hr className="border-gray-600" />
+                                        <button onClick={() => dispatch(logout())} className="p-2.5 hover:bg-red-800/80 hover:text-white rounded-lg capitalize duration-300 w-full text-left flex items-center justify-between">sign out <FaSignOutAlt /></button>
+                                    </div>
+                                    :
+                                    <div className="grid gap-y-5 w-full">
+                                        <Link to={"/sign-in"}>
+                                            <button className="border-none border underline underline-offset-4 rounded-md p-3 capitalize dark:bg-[#636f81]/40 bg-cyan-800/60 text-white dark:border-[#374151] duration-300 w-full text-center">
+                                                login
+                                            </button>
+                                        </Link>
+                                        <Link to={"/sign-up"}>
+                                            <button className="dark:border border-0 rounded-md p-3 capitalize dark:bg-[#374151] bg-slate-500 text-white dark:border-[#374151] duration-300 w-full text-center">
+                                                sign-up
+                                            </button>
+                                        </Link>
+                                    </div>
+                            }
                             <div className="w-full space-y-8">
                                 <h1 className="text-xl text-start capitalize font-semibold">popular tags</h1>
                                 <div className="space-y-5 flex flex-col">

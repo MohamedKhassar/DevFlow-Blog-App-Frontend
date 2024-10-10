@@ -95,7 +95,7 @@ const SignUn = () => {
                             {error && <p className={cn('text-red-600 text-justify duration-300',
                                 error.toLowerCase().includes("password") && "text-sm"
                             )}>{error}</p>}
-                            <button className='bg-slate-700 text-white md:py-4 py-3 md:text-base text-sm rounded-md w-full capitalize duration-200 hover:bg-slate-800 flex justify-center disabled:cursor-not-allowed' disabled={isLoading}>{isLoading ? <BiLoader className='animate-spin w-full' /> : "sign in"}</button>
+                            <button className='bg-slate-700 text-white md:py-4 py-3 md:text-base text-sm rounded-md w-full capitalize duration-200 hover:bg-slate-800 flex justify-center disabled:cursor-not-allowed' disabled={isLoading}>{isLoading ? <BiLoader className='animate-spin w-full' /> : "register"}</button>
                         </div>
                         <div className='relative flex justify-center items-center'>
                             <hr className='w-full' />
