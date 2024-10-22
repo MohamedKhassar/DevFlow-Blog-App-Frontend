@@ -6,6 +6,7 @@ export interface UserTypeBase {
     email: string;
     password: string;
     token?: string;
+    created_at: string
     id?: string;
 }
 

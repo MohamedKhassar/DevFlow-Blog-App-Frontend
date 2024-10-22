@@ -1,7 +1,7 @@
 import { cn } from "lib/cn"
 import { useAppDispatch, useAppSelector } from "lib/store"
 import { useEffect, useRef, useState } from "react"
-import { BiSearch } from "react-icons/bi"
+import { BiLoader, BiSearch } from "react-icons/bi"
 import { IoClose } from "react-icons/io5"
 import { MdOutlineMenu } from "react-icons/md"
 import { PiMoonStarsFill, PiSunDimFill } from "react-icons/pi"
@@ -17,7 +17,8 @@ const NavBar = () => {
     const theme = useAppSelector(state => state.theme)
     const [isUserMenu, setIsUserMenu] = useState(false)
     const [isOpened, setIsOpened] = useState(false)
-    const { user } = useAppSelector(state => state.user)
+    const { user, isLoading } = useAppSelector(state => state.user)
+    const protectedRoutes = ["/profile"];
     const dispatch = useAppDispatch()
     const ref = useRef<HTMLDivElement>(null);
     const handleClickOutside = (event: MouseEvent) => {
@@ -34,10 +35,26 @@ const NavBar = () => {
         };
     });
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (innerWidth <= 1024) {
+                setIsUserMenu(false)
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+    useEffect(() => {
+        setIsUserMenu(false)
+    }, [pathname])
     return (
         <div className={
-            cn(["/sign-in", "/sign-up"].includes(pathname) ? "hidden" : "flex",
-                "h-20 lg:px-10 px-20 z-0 shadow-2xl shadow-gray-500/20 md:justify-between justify-center  items-center duration-300 sticky top-0 bg-white dark:bg-dark w-full"
+            cn((["/sign-in", "/sign-up"].includes(pathname) || protectedRoutes.includes(pathname) && !user) && "hidden" ? "hidden" : "flex",
+                "h-20 lg:px-10 px-20 z-10 md:justify-between justify-center  items-center duration-300 sticky top-0 bg-white dark:bg-dark w-full"
             )}>
             <div className="flex items-center gap-5">
                 <button onClick={() => setIsOpened(!isOpened)}>
@@ -53,55 +70,56 @@ const NavBar = () => {
             <div className="flex gap-x-10 justify-center
              items-center">
                 {
-                    user ?
-                        <div className="relative hidden lg:block" ref={ref}>
-                            <button onClick={() => setIsUserMenu(!isUserMenu)} className=" bg-dark/30 dark:bg-purple-950/50 rounded-full p-3 cursor-pointer border-2 border-purple-900 duration-300 hover:border-purple-800">
-                                <FaUser className="size-5" />
-                            </button>
-                            <AnimatePresence>
-                                {
-                                    isUserMenu &&
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1, transition: { duration: .2, ease: "linear" } }}
-                                        exit={{ opacity: 0, scale: 0.9, transition: { duration: .1, ease: "linear" } }}
-                                        className="absolute p-5 w-64 space-y-3 dark:bg-black backdrop-blur dark:border-none border right-0 rounded-lg top-full my-3">
-                                        <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300">
-                                            <h2>{user.name}</h2>
-                                        </div>
-                                        <hr className="border-gray-600" />
-                                        <div className="capitalize space-y-2">
-                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
-                                                <Link to={"/profile"}>
+                    !isLoading ?
+                        user ?
+                            <div className="relative hidden lg:block" ref={ref}>
+                                <button onClick={() => setIsUserMenu(!isUserMenu)} className="bg-purple-800/50 dark:bg-purple-950/50 rounded-full p-3 cursor-pointer border-2 border-purple-900 duration-300 hover:border-purple-800">
+                                    <FaUser className="size-5" />
+                                </button>
+                                <AnimatePresence>
+                                    {
+                                        isUserMenu &&
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1, transition: { duration: .2, ease: "linear" } }}
+                                            exit={{ opacity: 0, scale: 0.9, transition: { duration: .1, ease: "linear" } }}
+                                            className="absolute p-5 w-64 space-y-3 dark:bg-black backdrop-blur dark:border-none border right-0 rounded-lg top-full my-3 shadow-2xl">
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300">
+                                                <h2>{user.name}</h2>
+                                            </div>
+                                            <hr className="border-gray-600" />
+                                            <div className="capitalize space-y-2 flex flex-col">
+                                                <Link className="p-2.5 w-full hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer" to={"/profile"}>
                                                     profile
                                                 </Link>
+                                                <Link className="p-2.5 w-full hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer" to={"newPost"}>
+                                                    create a post
+                                                </Link>
+                                                <Link className="p-2.5 w-full hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer" to={"settings"}>
+                                                    settings
+                                                </Link>
                                             </div>
-                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
-                                                <Link to={"newPost"}>create a post</Link>
-                                            </div>
-                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
-                                                <Link to={"settings"}>settings</Link>
-                                            </div>
-                                        </div>
-                                        <hr className="border-gray-600" />
-                                        <button onClick={() => dispatch(logout())} className="p-2.5 hover:bg-red-800/80 hover:text-white rounded-lg capitalize duration-300 w-full text-left flex items-center justify-between">sign out <FaSignOutAlt /></button>
-                                    </motion.div>
-                                }
-                            </AnimatePresence>
-                        </div>
+                                            <hr className="border-gray-600" />
+                                            <button onClick={() => dispatch(logout())} className="p-2.5 hover:bg-red-800/80 hover:text-white rounded-lg capitalize duration-300 w-full text-left flex items-center justify-between">sign out <FaSignOutAlt /></button>
+                                        </motion.div>
+                                    }
+                                </AnimatePresence>
+                            </div>
+                            :
+                            <div className="lg:grid hidden grid-cols-2 gap-x-5">
+                                <Link to={"/sign-in"}>
+                                    <button className="border-none hover:border hover:no-underline underline underline-offset-4 rounded-md p-3 capitalize dark:hover:bg-[#636f81]/40 hover:bg-cyan-800/60 hover:text-white dark:hover:border-[#374151]  duration-300  w-full text-center">
+                                        login
+                                    </button>
+                                </Link>
+                                <Link to={"/sign-up"}>
+                                    <button className="border rounded-md p-3 capitalize dark:hover:bg-[#374151] hover:bg-slate-500 hover:text-white dark:hover:border-[#374151]  duration-300 w-full text-center">
+                                        sign-up
+                                    </button>
+                                </Link>
+                            </div>
                         :
-                        <div className="lg:grid hidden grid-cols-2 gap-x-5">
-                            <Link to={"/sign-in"}>
-                                <button className="border-none hover:border hover:no-underline underline underline-offset-4 rounded-md p-3 capitalize dark:hover:bg-[#636f81]/40 hover:bg-cyan-800/60 hover:text-white dark:hover:border-[#374151]  duration-300  w-full text-center">
-                                    login
-                                </button>
-                            </Link>
-                            <Link to={"/sign-up"}>
-                                <button className="border rounded-md p-3 capitalize dark:hover:bg-[#374151] hover:bg-slate-500 hover:text-white dark:hover:border-[#374151]  duration-300 w-full text-center">
-                                    sign-up
-                                </button>
-                            </Link>
-                        </div>
+                        <BiLoader className="size-7 animate-spin  hidden lg:block" />
                 }
                 <button onClick={() => dispatch(setTheme(theme.value === "light" ? "dark" : "light"))} className={cn("lg:static absolute right-4 dark:border-[#494949] rounded-lg md:p-3 p-2 dark:hover:bg-[#171717] lg:dark:bg-transparent dark:bg-[#171717] hover:bg-gray-300 duration-300 border"
                 )}>

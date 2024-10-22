@@ -44,7 +44,7 @@ const SignIn = () => {
         }
     }
     return (
-        <div className='flex justify-center items-center h-screen flex-col gap-y-5 py-32'>
+        <div className='relative flex justify-center items-center h-fit flex-col gap-y-5 py-10'>
             <Link to={"/"}><h1 className='font-bold lg:text-4xl md:text-2xl text-xl '>DevFlow</h1></Link>
             <div className="duration-300 shadow-2xl dark:shadow-gray-200/10 rounded-lg lg:w-[60rem] lg:h-[45rem] md:w-[45rem] md:h-[38rem]  mx-3 sm:mx-10 border border-slate-200 dark:border-slate-700 flex justify-between">
                 <motion.div

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { BiSearch } from "react-icons/bi";
+import { BiLoader, BiSearch } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "lib/store";
 import { logout } from "slice/authSlice";
@@ -9,7 +9,7 @@ import { FaSignOutAlt } from "react-icons/fa";
 
 const Menu = ({ closeMenu, isOpened }: { closeMenu: () => void, isOpened: boolean }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const { user } = useAppSelector(state => state.user)
+    const { user, isLoading } = useAppSelector(state => state.user)
     const dispatch = useAppDispatch()
     const handleClickOutside = (event: MouseEvent) => {
         if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -98,42 +98,46 @@ const Menu = ({ closeMenu, isOpened }: { closeMenu: () => void, isOpened: boolea
                             </div>
                             <p className='text-center text-sm md:text-base capitalize'>Share your thoughts and connect with others by creating posts and interacting with the <b>DevFlow</b> community.</p>
                             {
-                                user ?
+                                isLoading ?
                                     <div
-                                        className="p-5 w-full space-y-3 dark:bg-black backdrop-blur dark:border-none border rounded-lg my-3">
-                                        <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300">
-                                            <h2>{user.name}</h2>
-                                        </div>
-                                        <hr className="border-gray-600" />
-                                        <div className="space-y-2 capitalize">
-                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
-                                                <Link to={"/profile"}>
-                                                    profile
-                                                </Link>
-                                            </div>
-                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
-                                                <Link to={"newPost"}>create a post</Link>
-                                            </div>
-                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer">
-                                                <Link to={"settings"}>settings</Link>
-                                            </div>
-                                        </div>
-                                        <hr className="border-gray-600" />
-                                        <button onClick={() => dispatch(logout())} className="p-2.5 hover:bg-red-800/80 hover:text-white rounded-lg capitalize duration-300 w-full text-left flex items-center justify-between">sign out <FaSignOutAlt /></button>
+                                        className="p-5 w-full space-y-3 dark:bg-black backdrop-blur dark:border-none border rounded-lg my-3 flex justify-center">
+                                        <BiLoader className="size-10 animate-spin" />
                                     </div>
                                     :
-                                    <div className="grid gap-y-5 w-full">
-                                        <Link to={"/sign-in"}>
-                                            <button className="border-none border underline underline-offset-4 rounded-md p-3 capitalize dark:bg-[#636f81]/40 bg-cyan-800/60 text-white dark:border-[#374151] duration-300 w-full text-center">
-                                                login
-                                            </button>
-                                        </Link>
-                                        <Link to={"/sign-up"}>
-                                            <button className="dark:border border-0 rounded-md p-3 capitalize dark:bg-[#374151] bg-slate-500 text-white dark:border-[#374151] duration-300 w-full text-center">
-                                                sign-up
-                                            </button>
-                                        </Link>
-                                    </div>
+                                    user ?
+                                        <div
+                                            className="p-5 w-full space-y-3 dark:bg-black backdrop-blur dark:border-none border rounded-lg my-3">
+                                            <div className="p-2.5 hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300">
+                                                <h2>{user.name}</h2>
+                                            </div>
+                                            <hr className="border-gray-600" />
+                                            <div className="capitalize space-y-2 flex flex-col">
+                                                <Link onClick={closeMenu} className="p-2.5 w-full hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer" to={"/profile"}>
+                                                    profile
+                                                </Link>
+                                                <Link onClick={closeMenu} className="p-2.5 w-full hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer" to={"newPost"}>
+                                                    create a post
+                                                </Link>
+                                                <Link onClick={closeMenu} className="p-2.5 w-full hover:bg-purple-950/80 hover:text-white rounded-lg capitalize duration-300 cursor-pointer" to={"settings"}>
+                                                    settings
+                                                </Link>
+                                            </div>
+                                            <hr className="border-gray-600" />
+                                            <button onClick={() => dispatch(logout())} className="p-2.5 hover:bg-red-800/80 hover:text-white rounded-lg capitalize duration-300 w-full text-left flex items-center justify-between">sign out <FaSignOutAlt /></button>
+                                        </div>
+                                        :
+                                        <div className="grid gap-y-5 w-full">
+                                            <Link to={"/sign-in"}>
+                                                <button className="border-none border underline underline-offset-4 rounded-md p-3 capitalize dark:bg-[#636f81]/40 bg-cyan-800/60 text-white dark:border-[#374151] duration-300 w-full text-center">
+                                                    login
+                                                </button>
+                                            </Link>
+                                            <Link to={"/sign-up"}>
+                                                <button className="dark:border border-0 rounded-md p-3 capitalize dark:bg-[#374151] bg-slate-500 text-white dark:border-[#374151] duration-300 w-full text-center">
+                                                    sign-up
+                                                </button>
+                                            </Link>
+                                        </div>
                             }
                             <div className="w-full space-y-8">
                                 <h1 className="text-xl text-start capitalize font-semibold">popular tags</h1>
