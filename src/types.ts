@@ -7,6 +7,7 @@ export interface UserTypeBase {
     password: string;
     token?: string;
     created_at: string
+    bio: string
     id?: string;
 }
 

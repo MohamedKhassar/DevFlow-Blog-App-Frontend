@@ -54,7 +54,7 @@ const NavBar = () => {
     return (
         <div className={
             cn((["/sign-in", "/sign-up"].includes(pathname) || protectedRoutes.includes(pathname) && !user) && "hidden" ? "hidden" : "flex",
-                "h-20 lg:px-10 px-20 z-10 md:justify-between justify-center  items-center duration-300 sticky top-0 bg-white dark:bg-dark w-full"
+                "h-20 lg:px-10 px-20 z-10 md:justify-between justify-center  items-center duration-300 relative top-0 bg-white dark:bg-dark w-full"
             )}>
             <div className="flex items-center gap-5">
                 <button onClick={() => setIsOpened(!isOpened)}>

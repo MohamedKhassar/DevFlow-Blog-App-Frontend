@@ -133,7 +133,10 @@ const userSlice = createSlice({
                 state.error = null
                 state.user = action.payload
                 // console.log(state.user)
-                cookies.set("token", action.payload.token)
+                cookies.set("token", action.payload.token, {
+                    path: "/",
+                    expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+                })
             })
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true
@@ -145,7 +148,10 @@ const userSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action: PayloadAction<RegisterUserType>) => {
                 // state.user = action.payload
-                cookies.set("token", action.payload.token)
+                cookies.set("token", action.payload.token, {
+                    path: "/",
+                    expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+                })
                 console.log(state.user)
                 state.isLoading = false
                 state.error = null
